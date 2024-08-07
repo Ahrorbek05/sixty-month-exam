@@ -65,7 +65,7 @@ function Login({ setToken }) {
                 setToken(data.access_token);
                 setError(null);
                 setSuccess('Login successful! Redirecting to home...');
-                setTimeout(() => navigate('/'), 2000);
+                navigate('/')
             }
         })
         .catch((error) => {
