@@ -1,5 +1,4 @@
 import React, { useRef, useState } from 'react';
-import register from '../Register';
 import styles from './index.module.css';
 import image from '../../../public/register.png';
 import avatar from '../../../public/avatar.png';
