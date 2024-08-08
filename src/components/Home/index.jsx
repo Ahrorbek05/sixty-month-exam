@@ -6,14 +6,32 @@ function Home() {
   const [year, setYear] = useState('');
   const [price, setPrice] = useState('');
   const [items, setItems] = useState(() => {
-    const storedItems = localStorage.getItem('items');
-    return storedItems ? JSON.parse(storedItems) : [];
+    const storeItems = localStorage.getItem('items');
+    return storeItems ? JSON.parse(storeItems) : [];
   });
+  const [error, setError] = useState('');
 
-  const handleSubmit = (event) => {
+function handleSubmit(event) {
     event.preventDefault();
-    const newItem = { name, year, price };
 
+    if (!name) {
+      setError('Name is required.');
+      return;
+    }
+
+    if (!/^\d{4}$/.test(year)) {
+      setError('Year must be a valid 4-digit number.');
+      return;
+    }
+
+    if (!/^\d+(\.\d{1,2})?$/.test(price) || parseFloat(price) <= 0) {
+      setError('Price must be a positive number.');
+      return;
+    }
+
+    setError('');
+
+    const newItem = { name, year, price };
     const updatedItems = [...items, newItem];
     setItems(updatedItems);
     localStorage.setItem('items', JSON.stringify(updatedItems));
@@ -23,16 +41,20 @@ function Home() {
     setPrice('');
   };
 
-  const handleDelete = (index) => {
-    const updatedItems = items.filter((_, i) => i !== index);
-    setItems(updatedItems);
-    localStorage.setItem('items', JSON.stringify(updatedItems));
+function handleDelete(index) {
+    setItems((prevItems) => {
+      const updatedItems = [...prevItems];
+      updatedItems.splice(index, 1);
+      localStorage.setItem('items', JSON.stringify(updatedItems));
+      return updatedItems;
+    });
   };
 
   return (
     <div className={styles.container}>
-      <h2 className={styles.heading}>Item Form</h2>
+      <h2 className={styles.heading}>Mashinalar haqida ma'lumot</h2>
       <form onSubmit={handleSubmit} className={styles.form}>
+        {error && <p className={styles.error}>{error}</p>}
         <div className={styles.formGroup}>
           <label className={styles.label}>Name:</label>
           <input
@@ -66,14 +88,14 @@ function Home() {
         <button type="submit" className={styles.button}>Save</button>
       </form>
 
-      <h2 className={styles.heading}>Saved Items</h2>
+      <h2 className={styles.heading}>Kiritilgan ma'lumotlar</h2>
       <div className={styles.cardContainer}>
         {items.map((item, index) => (
           <div key={index} className={styles.card}>
             <h3 className={styles.cardTitle}>{item.name}</h3>
             <p className={styles.cardText}>Year: {item.year}</p>
             <p className={styles.cardText}>Price: {item.price}</p>
-            <button className={styles.deleteButton} onClick={() => handleDelete(index)}>Delete</button>
+            <button className={styles.deleteButton} onClick={() => handleDelete(index)}><i class="fa-regular fa-trash-can"></i></button>
           </div>
         ))}
       </div>

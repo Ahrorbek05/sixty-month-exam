@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import register from '../Register';
 import styles from './index.module.css';
 import image from '../../../public/register.png';
 import avatar from '../../../public/avatar.png';
@@ -13,6 +14,12 @@ function Login({ setToken }) {
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(null);
     const navigate = useNavigate();
+
+    async function Registration(email) {
+        const response = await fetch(`https://api.escuelajs.co/api/v1/users?email=${email}`);
+        const data = await response.json();
+        return data.length > 0;
+    }
 
     function validate() {
         const email = emailRef.current.value;
@@ -36,16 +43,26 @@ function Login({ setToken }) {
         return true;
     }
 
-    function handleSubmit(event) {
+    async function handleSubmit(event) {
         event.preventDefault();
         const isValid = validate();
         if (!isValid) {
             return;
         }
 
+        const email = emailRef.current.value;
+        const password = passwordRef.current.value;
+
+        const isRegistered = await Registration(email);
+        if (!isRegistered) {
+            setSuccess("You are not registered! Redirecting to registration...");
+            setTimeout(() => navigate('/register'), 2000);
+            return;
+        }
+
         const user = {
-            email: emailRef.current.value,
-            password: passwordRef.current.value
+            email,
+            password
         };
 
         fetch("https://api.escuelajs.co/api/v1/auth/login", {
@@ -58,14 +75,14 @@ function Login({ setToken }) {
         .then((response) => response.json())
         .then((data) => {
             if (data.message === 'Unauthorized') {
-                setError('The email was entered incorrectly!');
+                setError('The email or password was entered incorrectly!');
                 emailRef.current.focus();
                 emailRef.current.style.outlineColor = 'red';
             } else {
                 setToken(data.access_token);
                 setError(null);
                 setSuccess('Login successful! Redirecting to home...');
-                navigate('/')
+                setTimeout(() => navigate('/'), 2000);
             }
         })
         .catch((error) => {
@@ -110,7 +127,7 @@ function Login({ setToken }) {
                     </button>
                     <div className={styles.text}>
                         <p>Don't have an account?</p>
-                        <a href="/register">Sign up now</a>
+                        <a href={register}>Sign up now</a>
                     </div>
                 </div>
             </div>
