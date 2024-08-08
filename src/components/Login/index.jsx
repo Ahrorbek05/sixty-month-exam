@@ -127,7 +127,7 @@ function Login({ setToken }) {
                     </button>
                     <div className={styles.text}>
                         <p>Don't have an account?</p>
-                        <a href={"register"}>Sign up now</a>
+                        <a href="/register">Sign up now</a>
                     </div>
                 </div>
             </div>
