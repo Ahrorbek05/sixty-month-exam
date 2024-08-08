@@ -57,7 +57,7 @@ function handleDelete(index) {
         {error && <p className={styles.error}>{error}</p>}
         <div className={styles.formGroup}>
           <label className={styles.label}>Name:</label>
-          <input
+          <input placeholder='Nomini kiriting!'
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -67,7 +67,7 @@ function handleDelete(index) {
         </div>
         <div className={styles.formGroup}>
           <label className={styles.label}>Year:</label>
-          <input
+          <input placeholder='Yilini kiriting!'
             type="text"
             value={year}
             onChange={(e) => setYear(e.target.value)}
@@ -77,7 +77,7 @@ function handleDelete(index) {
         </div>
         <div className={styles.formGroup}>
           <label className={styles.label}>Price:</label>
-          <input
+          <input placeholder='Narxni kiriting!'
             type="text"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
@@ -94,7 +94,7 @@ function handleDelete(index) {
           <div key={index} className={styles.card}>
             <h3 className={styles.cardTitle}>{item.name}</h3>
             <p className={styles.cardText}>Year: {item.year}</p>
-            <p className={styles.cardText}>Price: {item.price}</p>
+            <p className={styles.cardText}>Price: {item.price}$</p>
             <button className={styles.deleteButton} onClick={() => handleDelete(index)}><i class="fa-regular fa-trash-can"></i></button>
           </div>
         ))}
